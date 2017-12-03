@@ -4,7 +4,6 @@ import BasicDetails from './FutureValueCalculator/BasicDetails.jsx';
 import Summary from './FutureValueCalculator/Summary.jsx';
 
 const FutureValueCalculator = () => {
-
   return (
     <div className="container">
       <div className="row">
