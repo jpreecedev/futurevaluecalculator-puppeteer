@@ -1,0 +1,11 @@
+{
+  "plugins": ["jest"],
+  "env": {
+    "browser": true,
+    "jest/globals": true
+  },
+  "globals": {
+    "chrome": true,
+    "performance": true
+  }
+}

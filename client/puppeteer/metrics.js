@@ -1,8 +1,10 @@
 import puppeteer from 'puppeteer'
+import devices from 'puppeteer/DeviceDescriptors'
 
 const getPageMetrics = async () => {
-  const browser = await puppeteer.launch({ headless: false })
+  const browser = await puppeteer.launch({ headless: true, screenshot: true })
   const page = await browser.newPage()
+  await page.emulate(devices['iPhone 6'])
 
   await page.waitFor(1000)
 
@@ -16,12 +18,14 @@ const getPageMetrics = async () => {
   await page._client.send('Network.emulateNetworkConditions', thirdGenMobileNetwork)
 
   await page.goto('http://localhost:8080/')
+  await page.screenshot({ path: 'client/puppeteer/screenshots/page.png', fullPage: true })
+  await page.pdf({ path: 'client/puppeteer/pdfs/api.pdf', format: 'A4' })
 
   const perf = await page.evaluate(_ => {
     const { loadEventEnd, navigationStart } = performance.timing
 
     return {
-      firstPaint: chrome.loadTimes().firstPaintTime * 1000 - navigationStart,
+      // firstPaint: chrome.loadTimes().firstPaintTime * 1000 - navigationStart,
       loadTime: loadEventEnd - navigationStart
     }
   })
@@ -34,6 +38,7 @@ const getPageMetrics = async () => {
 
   console.log(`First paint in ${perf.firstPaint}ms`)
   console.log(`Load time ${perf.loadTime}ms`)
+  console.log(await page.title())
   console.log(`${100 - usedJS}% of JS is unused`)
 
   await browser.close()
